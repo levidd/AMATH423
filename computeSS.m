@@ -4,14 +4,15 @@ function [pkm, actin, rna, hs, stability] = computeSS(j1,j2,j3,j4,j5)
 
 % define returning vectors of length max of j1 and j2 (for looping through
 % different parameter values. Only set up for changing j1 and j2
-pkm = zeros(max(length(j1),length(j2)),1);
-actin = zeros(max(length(j1),length(j2)),1);
-rna = zeros(max(length(j1),length(j2)),1);
-hs = zeros(max(length(j1),length(j2)),1);
-stability = zeros(max(length(j1),length(j2)),1);
+pkm = cell(max(length(j1,j2)),1);
+actin = cell(max(length(j1,j2)),1);
+rna = cell(max(length(j1),length(j2)),1);
+hs = cell(max(length(j1),length(j2)),1);
+stability = cell(max(length(j1),length(j2)),1);
 
 for j = 1:length(j1)
     for q = 1:length(j2)
+        index = max(j,q);
         steadystates = @(pkm) j1(j)*j4.*(j2(q)+j3.*pkm).*pkm.*(1-pkm) - ...
             pkm.*(1+j2(q)+j3.*pkm).*(1+j4.*(j2(q)+j3.*pkm)./(1+j2(q)+...
             j3.*pkm).*pkm) - (j5*j2(q)+j5.*j3.*pkm).*(1+j4.*(j2(q)+j3.*pkm)...
@@ -34,16 +35,20 @@ for j = 1:length(j1)
         
         
         for i = 1:length(ssAns)
-            allSteadyStates{i+1,2} = ssActin(ssAns(i));
-            allSteadyStates{i+1,3} = ssRNA(ssAns(i));
-            allSteadyStates{i+1,4} = ssHS(ssAns(i));
-            jac = jacMat(allSteadyStates{i+1,1}(1), allSteadyStates{i+1,2}(1),...
-                allSteadyStates{i+1,3}(1), allSteadyStates{i+1,4}(1), 0);
+            p = ssAns(i);
+            a = ssActin(p);
+            r = ssRNA(p);
+            h = ssHS(p);
+            pkm{index} = [pkm{index}(1), p];
+            actin{index} = [actin{index}(1) , a];
+            rna{index} = [rna{index}(1), r];
+            hs{index}= [hs{index}(1), h];
+            jac = jacMat(p, a, r, h, 0);
             [~,~,isStable] = find(sign(eigs(jac)) == 1, 1); % returns -empty if no postive eigenvalues
             if isempty(isStable)
-                allSteadyStates{i+1,5} = "Stable";
+                stability{index} = [stability{index}(1), "Stable"];
             else
-                allSteadyStates{i+1,5} = "Unstable";
+                stability{index} = [stability{index}(1), "Unstable"];
             end
         end
     end
