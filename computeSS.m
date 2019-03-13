@@ -45,19 +45,21 @@ for j = 1:length(j1)
         
         for i = 1:length(ssAns)
             p = ssAns(i);
-            a = ssActin(p);
-            r = ssRNA(p);
-            h = ssHS(p);
-            pkm{index} = [pkm{index}, p];
-            actin{index} = [actin{index}, a];
-            rna{index} = [rna{index}, r];
-            hs{index}= [hs{index}, h];
-            jac = jacMat(p, a, r, h, 0);
-            [~,~,isStable] = find(sign(eigs(jac)) == 1, 1); % returns -empty if no postive eigenvalues
-            if isempty(isStable)
-                stability{index} = [stability{index}, "Stable"];
-            else
-                stability{index} = [stability{index}, "Unstable"];
+            if isreal(p)
+                a = ssActin(p);
+                r = ssRNA(p);
+                h = ssHS(p);
+                pkm{index} = [pkm{index}, p];
+                actin{index} = [actin{index}, a];
+                rna{index} = [rna{index}, r];
+                hs{index}= [hs{index}, h];
+                jac = jacMat(p, a, r, h, 0);
+                [~,~,isStable] = find(sign(eigs(jac)) == 1, 1); % returns -empty if no postive eigenvalues
+                if isempty(isStable)
+                    stability{index} = [stability{index}, "Stable"];
+                else
+                    stability{index} = [stability{index}, "Unstable"];
+                end
             end
         end
     end
