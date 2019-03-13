@@ -7,7 +7,7 @@ j1 = 80; %80; default
 j2 = 0.05;
 j3 = 0.5;
 j4 = 0.16;
-j5 = 0.05;
+j5 = 0.1;
 ta1 = 1500;
 ta2 = 0.5;
 ta3 = 60;
@@ -23,9 +23,10 @@ initialGuess = [0, 0, 0];
 % ODE solution for simple model. 
 [T,Y] = ode45(@(t,y) neuronFireODE(t,y,stimFun,j1,j2,j3,j4,j5,ta1,ta2,...
     ta3,ta4,ta5), [0,1000], initialGuess);
-
+disp('Trying to solve new ODE system');
+opts = odeset('RelTol', 1e-1, 'AbsTol', 1e-2);
 [T2,Y2] = ode45(@(t,y) neuronFireODENewTerm(t,y,stimFun,j1,j2,j3,j4,j5,...
-    ta1,ta2,ta3,ta4,ta5), [0,1000], [initialGuess, 0]);
+    ta1,ta2,ta3,ta4,ta5), [0,500], [initialGuess, 0], opts);
 
 figure(1)
 plot(T, Y(:,1));hold on;
