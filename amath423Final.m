@@ -3,7 +3,7 @@
 close all; clc;
 
 % Default parameter values
-j1 = 57; %80; default
+j1 = 80; %80; default
 j2 = 0.05;
 j3 = 0.5;
 j4 = 0.16;
