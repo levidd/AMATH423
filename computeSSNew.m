@@ -34,7 +34,7 @@ for j = 1:length(j1)
             % Jacobian entries
             jacMat = @(pkm, actin, rna, hs) ...
                     [-j1(j).*rna-1, 0, j1(j)-j1(j).*pkm, -1;
-                    1-actin, -j2(q)-j3.*pkm-1, 0, 0;
+                    j3*(1-actin), -j2(q)-j3.*pkm-1, 0, 0;
                     j4.*actin-j4.*actin.*rna, j4.*pkm-j4.*pkm.*rna, -j4...
                         .*actin.*pkm - 1, 0;
                     0, j5(k)-j5(k).*hs, 0, -j5(k).*actin-1];
@@ -45,11 +45,11 @@ for j = 1:length(j1)
 
             % symbolic solving for roots
             syms x;
-            ssAns = double(vpasolve(ssPkm(x)==0, x));
+            ssAns = double(vpasolve(ssPkm(x) - x ==0, x));
 
             for i = 1:length(ssAns)
                 p = ssAns(i);
-                if isreal(p) %&& p>=0
+                if isreal(p) && p>=0
                     a = ssActin(p);
                     r = ssRNA(p);
                     h = ssHs(p);
