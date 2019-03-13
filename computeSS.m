@@ -1,6 +1,6 @@
 % takes in paramter values and computes the steady states and the stability
 % of the found steady states. Returns everything via cells
-function [pkm, actin, rna, hs, stability] = computeSS(j1,j2,j3,j4,j5)
+function [pkm, actin, rna, hs, stability, indexes] = computeSS(j1,j2,j3,j4,j5)
 
 % define returning vectors of length max of j1 and j2 (for looping through
 % different parameter values. Only set up for changing j1 and j2
@@ -9,6 +9,7 @@ actin = cell(max(length(j1),length(j2)),1);
 rna = cell(max(length(j1),length(j2)),1);
 hs = cell(max(length(j1),length(j2)),1);
 stability = cell(max(length(j1),length(j2)),1);
+indexes = cell(max(length(j1), length(j2)), 1);
 
 for j = 1:length(j1)
     for q = 1:length(j2)
@@ -45,7 +46,7 @@ for j = 1:length(j1)
         
         for i = 1:length(ssAns)
             p = ssAns(i);
-            if isreal(p)
+            if isreal(p) && p>=0
                 a = ssActin(p);
                 r = ssRNA(p);
                 h = ssHS(p);
@@ -56,10 +57,11 @@ for j = 1:length(j1)
                 jac = jacMat(p, a, r, h, 0);
                 [~,~,isStable] = find(sign(eigs(jac)) == 1, 1); % returns -empty if no postive eigenvalues
                 if isempty(isStable)
-                    stability{index} = [stability{index}, "Stable"];
+                    stability{index} = [stability{index}, 1];
                 else
-                    stability{index} = [stability{index}, "Unstable"];
+                    stability{index} = [stability{index}, -1];
                 end
+                indexes{index} = [indexes{index}, index];
             end
         end
     end
