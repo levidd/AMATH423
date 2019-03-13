@@ -37,7 +37,7 @@ for j = 1:length(j1)
             % Jacobian entries
             jacMat = @(pkm, actin, rna, hs, stim) ...
                     [-j1(j).*rna-1, 0, j1(j).*(1-pkm), -1;
-                     1-actin, -(j2(q)+j3.*pkm)-1, 0, 0;
+                     j3*(1-actin), -(j2(q)+j3.*pkm)-1, 0, 0;
                      j4.*actin.*(1-rna), j4.*(pkm+stim).*(1-rna), -j4.*actin.*(pkm+stim)-1, 0;
                      0, j5(k), 0, -1];
 
