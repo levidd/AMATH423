@@ -7,8 +7,8 @@ j1 = 80; %80; default
 j2 = 0.05;
 j3 = 0.5;
 j4 = 0.16;
-j5 = 1;
-j6 = 1;
+j5 = 5;
+j6 = 0.4;
 ta1 = 1500;
 ta2 = 0.5;
 ta3 = 60;
@@ -19,7 +19,7 @@ strength = 125;
 stimFun = @(t) 0.003 + (t>=0).*strength - strength.*(t>30); % basal value
         % of 0.003. Strength of square wave between time 0 and 30
 
-initialGuess = [0, 0, 0];
+initialGuess = ones(1,3).*1e-4;
 
 % ODE solution for simple model. 
 [T,Y] = ode45(@(t,y) neuronFireODE(t,y,stimFun,j1,j2,j3,j4,j5,ta1,ta2,...
